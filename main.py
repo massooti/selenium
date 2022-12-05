@@ -7,7 +7,30 @@ import pickle
 from selenium.webdriver.support.ui import WebDriverWait
 from src import printcolors as pc
 import time
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from selenium.webdriver.support import expected_conditions as EC
 # from fake_headers import Headers
+
+
+def check_exists_by_xpath(driver, xpath) -> bool:
+    try:
+        driver.find_element(
+            'xpath', '/html/body/div[1]/main/div[1]/section[2]/div/span/span/button/span[1]/i')
+    except NoSuchElementException:
+        return False
+    return True
+
+
+def login(driver, link, i):
+    name = 'bot- '
+    driver.get(link)
+    # driver.delete_cookie('auth')
+    driver.find_element(
+        "id", 'name').send_keys(name)
+    driver.find_element(
+        "id", 'lastName').send_keys(i)
+    driver.find_element(
+        'xpath', '/html/body/div/section/div/form/div[4]/button').click()
 
 
 def selenium(guests, link):
@@ -25,36 +48,29 @@ def selenium(guests, link):
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--ignore-certificate-errors')
-    driver = webdriver.Chrome(options=chrome_options)
+    chrome_options.add_experimental_option(
+        "prefs", {"profile.block_third_party_cookies": True})
     i = 1
     for i in range(guests):
+        driver = webdriver.Chrome(options=chrome_options)
         try:
-            driver.get(link)
+            # wait = WebDriverWait(driver, timeout=1)
+            time.sleep(1)
             driver.find_element(
-                "id", 'name').send_keys(f'bot{i}-')
-            driver.find_element(
-                "id", 'lastName').send_keys(f'{i}')
-            log_in_button = driver.find_element(
-                'xpath', '/html/body/div/section/div/form/div[4]/button')
-            log_in_button.click()
-            time.sleep(0.9)
-            isLoginedIn = driver.find_element(
-                'xpath', '/html/body/div[1]/main/div[1]/section[2]/div/span/span/button/span[1]/i')
-
-            if isLoginedIn:
-                print(i)
-
-        except Exception as e:
-            print(e)
-            exit()
-
-    # driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS)
+                'xpath', '/html/body/div[1]/main/div[1]/section[1]')
+            print(driver.get_cookie('auth'))
+            driver.delete_cookie('auth')
+            driver.execute_script(f'window.open("{link}");')
+        except NoSuchElementException as e:
+            print(i)
+            driver.execute_script(f'window.open("{link}");')
+            login(driver, link, i)
 
 
 if __name__ == '__main__':
     pc.printout("Hello there\n", pc.YELLOW)
     # link = input('please enter link: ')
-    link = "https://test.alocom.co/class/you123/a4bbabab"
+    link = "https://class.kavano.org/class/zaeem/6564862a"
     # guests = int(input('please enter guests number: '))
     guests = 15
     selenium(guests, link)
