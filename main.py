@@ -12,6 +12,21 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common import window
 
 
+def login(driver, i):
+    name = 'bot- '
+    driver.find_element(
+        "id", 'firstName').send_keys(name)
+    driver.find_element(
+        "id", 'lastName').send_keys(i)
+    driver.find_element(
+        'xpath', '//*[@id="root"]/section/div/form/button').click()
+    # wait = WebDriverWait(driver, timeout=1)
+    time.sleep(0.9)
+    print(i, 'logiedin')
+    driver.find_element(
+        'xpath', '/html/body/div[1]/main/div[1]/section[1]')
+
+
 def selenium(guests, link):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option("detach", True)
@@ -29,36 +44,25 @@ def selenium(guests, link):
     chrome_options.add_argument('--ignore-certificate-errors')
     driver = webdriver.Chrome(options=chrome_options)
     driver.get(link)
-    # i = 1
+    i = 1
     for i in range(guests):
         try:
-            if driver.get_cookie('auth-zaeem-e8a2f45f') == None:
-                name = 'bot- '
-                driver.find_element(
-                    "id", 'firstName').send_keys(name)
-                driver.find_element(
-                    "id", 'lastName').send_keys(i)
-                driver.find_element(
-                    'xpath', '//*[@id="root"]/section/div/form/button').click()
-                # wait = WebDriverWait(driver, timeout=1)
-                time.sleep(0.9)
-                driver.find_element(
-                    'xpath', '/html/body/div[1]/main/div[1]/section[1]')
-            else:
-                print(driver.get_cookie('auth-zaeem-e8a2f45f'))
+            if driver.get_cookie('auth-zaeem-e8a2f45f') != None:
                 driver.delete_cookie('auth-zaeem-e8a2f45f')
+                time.sleep(0.3)
+                driver.execute_script(f'window.open("{link}","_blank");')
+                driver.switch_to.window(driver.window_handles[i])
 
-            # driver.execute_script(f'window.open("{link}");')
-            driver.execute_script(f'window.open("{link}","_blank");')
-            driver.switch_to.window(driver.window_handles[i])
+            print(i, 'new tab')
+            login(driver, i)
             i += 1
 
         except NoSuchElementException as e:
-            print(e)
-            # driver.execute_script(f'window.open("{link}", );')
-            # driver = webdriver.Chrome(options=chrome_options)
             print(i)
-        # driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS)
+            driver.delete_cookie('auth-zaeem-e8a2f45f')
+            driver.switch_to.window(driver.window_handles[i])
+            time.sleep(0.3)
+            login(driver, i)
 
 
 if __name__ == '__main__':
@@ -66,5 +70,5 @@ if __name__ == '__main__':
     # link = input('please enter link: ')
     link = "https://test.alocom.co/class/zaeem/e8a2f45f"
     # guests = int(input('please enter guests number: '))
-    guests = 3
+    guests = 15
     selenium(guests, link)
