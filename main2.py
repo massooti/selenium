@@ -50,40 +50,34 @@ def selenium(guests, link):
     while True:
         i = 1
         try:
-            # log_in_button.click()
-            # try:
-            try:
-                name = 'bot- '
-                driver.get(link)
-                driver.find_element(
-                    "id", 'name').send_keys(name)
-                driver.find_element(
-                    "id", 'lastName').send_keys(i)
-                driver.find_element(
-                    'xpath', '/html/body/div/section/div/form/div[4]/button').click()
-                # wait = WebDriverWait(driver, timeout=1)
-                time.sleep(1)
-                driver.find_element(
-                    'xpath', '/html/body/div[1]/main/div[1]/section[1]')
-                print(driver.get_cookie('auth'))
-                driver.delete_cookie('auth-zaeem-6564862a')
-                # driver.execute_script(f'window.open("{link}");')
+            name = 'bot- '
+            driver.get(link)
+            driver.find_element(
+                "id", 'name').send_keys(name)
+            driver.find_element(
+                "id", 'lastName').send_keys(i)
+            driver.find_element(
+                'xpath', '/html/body/div/section/div/form/div[4]/button').click()
+            # wait = WebDriverWait(driver, timeout=1)
+            time.sleep(1)
+            exit()
+            driver.find_element(
+                'xpath', '/html/body/div[1]/main/div[1]/section[1]')
+            time.sleep(1)
+            print(driver.get_cookie('auth-zaeem-e8a2f45f'))
+            driver.delete_cookie('auth-zaeem-e8a2f45f')
+            # driver.execute_script(f'window.open("{link}");')
 
-            except NoSuchElementException as e:
-                driver.execute_script(f'window.open("{link}", );')
-                driver = webdriver.Chrome(options=chrome_options)
-                print(i)
-
-        except Exception as e:
-            import logging
-            logging.exception(e)
-            # break
+        except NoSuchElementException as e:
+            driver.execute_script(f'window.open("{link}", );')
+            driver = webdriver.Chrome(options=chrome_options)
+            print(i)
 
 
 if __name__ == '__main__':
     pc.printout("Hello there\n", pc.YELLOW)
     # link = input('please enter link: ')
-    link = "https://class.kavano.org/class/zaeem/6564862a"
+    link = "https://test.alocom.co/class/zaeem/e8a2f45f"
     # guests = int(input('please enter guests number: '))
     guests = 15
     selenium(guests, link)
