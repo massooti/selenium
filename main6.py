@@ -15,7 +15,7 @@ from selenium.common.exceptions import TimeoutException
 
 def login(driver, i):
     try:
-        name = 'bot1- '
+        name = 'bot231- '
         # driver.find_element(
         #     "id", 'firstName').send_keys(name)
         WebDriverWait(driver, 1).until(EC.element_to_be_clickable(
@@ -24,29 +24,54 @@ def login(driver, i):
             "id", 'lastName').send_keys(i)
         driver.find_element(
             'xpath', '//*[@id="root"]/section/div/form/button').click()
+        # driver.delete_cookie('auth-zaeem-e8a2f45f')
         time.sleep(0.9)
         print(f'{i} is ok')
-        driver.delete_cookie('auth-zaeem-e8a2f45f')
 
     except NoSuchElementException as e:
         print(e)
         raise Exception(f'{i} is in dashboard')
 
 
+def loginGenerator(driver, max=0):
+    i = 0
+    while i < max:
+        name = 'bot231- '
+        try:
+            # driver.find_element(
+            #     "id", 'firstName').send_keys(name)
+            WebDriverWait(driver, 1).until(EC.element_to_be_clickable(
+                (("id", 'firstName')))).send_keys(name)
+            driver.find_element(
+                "id", 'lastName').send_keys(i)
+            driver.find_element(
+                'xpath', '//*[@id="root"]/section/div/form/button').click()
+            driver.delete_cookie('auth-zaeem-e8a2f45f')
+            time.sleep(0.9)
+            driver.execute_script(f'window.open("{link}","_blank");')
+            driver.switch_to.window(driver.window_handles[i+1])
+            yield i
+        except TimeoutException as e:
+            # driver.find_element(
+            #     "id", 'firstName').send_keys(name)
+            WebDriverWait(driver, 1).until(EC.element_to_be_clickable(
+                (("id", 'firstName')))).send_keys(name)
+            driver.find_element(
+                "id", 'lastName').send_keys(i)
+            driver.find_element(
+                'xpath', '//*[@id="root"]/section/div/form/button').click()
+            driver.delete_cookie('auth-zaeem-e8a2f45f')
+            time.sleep(0.9)
+            driver.execute_script(f'window.open("{link}","_blank");')
+            driver.switch_to.window(driver.window_handles[i+1])
+            yield i
+
+
 def selenium(guests, link):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option("detach", True)
-    chrome_options.add_experimental_option(
-        "excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option('useAutomationExtension', False)
-    chrome_options.add_experimental_option('prefs', {
-        "profile.default_content_setting_values.notifications": 1,
-        "profile.default_content_setting_values.media_stream_mic": 1,
-        "profile.default_content_setting_values.media_stream_camera": 1,
-    })
-
     chrome_options.add_argument(
-        '--user-agent="Mozilla/108 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79')
+        '--user-agent="Mozilla/108 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.5249.119')
     # chrome_options.add_argument('--headless')
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--disable-extensions")
@@ -60,27 +85,11 @@ def selenium(guests, link):
     driver = webdriver.Chrome(options=chrome_options)
     driver.get(link)
     i = 1
-    for i in range(guests):
+    for i in loginGenerator(driver, guests):
         print(f'{i} is current user')
-        try:
-            if driver.get_cookie('auth-zaeem-e8a2f45f') != None:
-                driver.delete_cookie('auth-zaeem-e8a2f45f')
-                driver.execute_script(f'window.open("{link}","_blank");')
-                driver.switch_to.window(driver.window_handles[i+1])
-
-            if (driver.find_element(
-                    'xpath', '/html/body/div[1]/main/div[1]/section[1]').is_displayed()):
-                print(i, 'logged in')
-
-                i += 1
-        except NoSuchElementException as e:
-            print(i, 'is in login page')
-            driver.delete_cookie('auth-zaeem-e8a2f45f')
-            login(driver, i)
-            driver.execute_script(f'window.open("{link}","_blank");')
-            driver.switch_to.window(driver.window_handles[i+1])
-        except Exception as exception:
-            print(i, 'is in DASHBOARD')
+        driver.delete_cookie('auth-zaeem-e8a2f45f')
+        print(f'cache deleted {driver.get_cookie("auth-zaeem-e8a2f45f")}')
+        time.sleep(0.9)
 
 
 if __name__ == '__main__':
@@ -88,5 +97,5 @@ if __name__ == '__main__':
     # link = input('please enter link: ')
     link = "https://test.alocom.co/class/zaeem/e8a2f45f"
     # guests = int(input('please enter guests number: '))
-    guests = 100
+    guests = 500
     selenium(guests, link)
