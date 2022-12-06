@@ -11,9 +11,10 @@ from selenium.common.exceptions import NoSuchElementException, WebDriverExceptio
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common import window
 from selenium.common.exceptions import TimeoutException
+from urllib import parse
 
 
-def login(driver, i):
+def login(driver, i, cookie):
     try:
         name = 'bot1- '
         # driver.find_element(
@@ -25,15 +26,28 @@ def login(driver, i):
         driver.find_element(
             'xpath', '//*[@id="root"]/section/div/form/button').click()
         time.sleep(0.9)
-        print(f'{i} is ok')
-        driver.delete_cookie('auth-zaeem-e8a2f45f')
+        pc.printout(f"{i} is ok\n", pc.GREEN)
+        driver.delete_cookie(cookie)
 
     except NoSuchElementException as e:
-        print(e)
         raise Exception(f'{i} is in dashboard')
 
 
+def close():
+    chrome_options = webdriver.ChromeOptions()
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.close()
+
+
 def selenium(guests, link):
+    path = link.rsplit('/class', 1)[-1]
+    cookie = 'auth' + path.replace('/', '-')
+
+    def open_new_tab(link, i):
+        driver.delete_cookie(cookie)
+        driver.execute_script(f'window.open("{link}","_blank");')
+        driver.switch_to.window(driver.window_handles[i+1])
+
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option("detach", True)
     chrome_options.add_experimental_option(
@@ -47,7 +61,7 @@ def selenium(guests, link):
 
     chrome_options.add_argument(
         '--user-agent="Mozilla/108 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79')
-    # chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--headless')
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--proxy-server='direct://'")
@@ -59,34 +73,28 @@ def selenium(guests, link):
     chrome_options.add_argument('--ignore-certificate-errors')
     driver = webdriver.Chrome(options=chrome_options)
     driver.get(link)
-    i = 1
     for i in range(guests):
-        print(f'{i} is current user')
+        pc.printout(f"{i} is current user\n", pc.CYAN)
         try:
-            if driver.get_cookie('auth-zaeem-e8a2f45f') != None:
-                driver.delete_cookie('auth-zaeem-e8a2f45f')
-                driver.execute_script(f'window.open("{link}","_blank");')
-                driver.switch_to.window(driver.window_handles[i+1])
-
+            if driver.get_cookie(cookie) != None:
+                open_new_tab(link, i)
             if (driver.find_element(
                     'xpath', '/html/body/div[1]/main/div[1]/section[1]').is_displayed()):
-                print(i, 'logged in')
+                pc.printout(f"{i} logged in\n", pc.BLACK)
 
                 i += 1
         except NoSuchElementException as e:
-            print(i, 'is in login page')
-            driver.delete_cookie('auth-zaeem-e8a2f45f')
-            login(driver, i)
-            driver.execute_script(f'window.open("{link}","_blank");')
-            driver.switch_to.window(driver.window_handles[i+1])
+            pc.printout(f"{i} is in login page\n", pc.BLUE)
+            # driver.close()
+            login(driver, i, cookie)
+            open_new_tab(link, i)
         except Exception as exception:
-            print(i, 'is in DASHBOARD')
+            pc.printout(f"{i} is in DASHBOARD\n", pc.RED)
+            # print(i, 'is in DASHBOARD')
 
 
 if __name__ == '__main__':
-    pc.printout("Hello there\n", pc.YELLOW)
-    # link = input('please enter link: ')
+
     link = "https://test.alocom.co/class/zaeem/e8a2f45f"
-    # guests = int(input('please enter guests number: '))
-    guests = 100
+    guests = 500
     selenium(guests, link)

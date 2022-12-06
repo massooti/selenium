@@ -47,31 +47,29 @@ def selenium(guests, link):
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--ignore-certificate-errors')
     driver = webdriver.Chrome(options=chrome_options)
-    while True:
-        i = 1
-        try:
-            name = 'bot- '
-            driver.get(link)
-            driver.find_element(
-                "id", 'name').send_keys(name)
-            driver.find_element(
-                "id", 'lastName').send_keys(i)
-            driver.find_element(
-                'xpath', '/html/body/div/section/div/form/div[4]/button').click()
-            # wait = WebDriverWait(driver, timeout=1)
-            time.sleep(1)
-            exit()
-            driver.find_element(
-                'xpath', '/html/body/div[1]/main/div[1]/section[1]')
-            time.sleep(1)
-            print(driver.get_cookie('auth-zaeem-e8a2f45f'))
-            driver.delete_cookie('auth-zaeem-e8a2f45f')
-            # driver.execute_script(f'window.open("{link}");')
 
-        except NoSuchElementException as e:
-            driver.execute_script(f'window.open("{link}", );')
-            driver = webdriver.Chrome(options=chrome_options)
-            print(i)
+    i = 1
+
+    name = 'bot- '
+    driver.get(link)
+    driver.find_element(
+        "id", 'firstName').send_keys(name)
+    driver.find_element(
+        "id", 'lastName').send_keys(i)
+    driver.find_element(
+        'xpath', '//*[@id="root"]/section/div/form/button').click()
+    # wait = WebDriverWait(driver, timeout=1)
+    time.sleep(1)
+    # driver.find_element(
+    #     'xpath', '/html/body/div[1]/main/div[1]/section[1]')
+    time.sleep(1)
+    driver.execute_script(f'window.open("{link}","_blank");')
+    driver.switch_to.window(driver.window_handles[i+1])
+    print(driver.get_cookie('auth-zaeem-e8a2f45f'))
+    driver.delete_cookie('auth-zaeem-e8a2f45f')
+    # driver.execute_script(f'window.open("{link}");')
+
+    driver.quit()
 
 
 if __name__ == '__main__':

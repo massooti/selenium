@@ -23,7 +23,6 @@ def login(driver, i):
             "id", 'lastName').send_keys(i)
         driver.find_element(
             'xpath', '//*[@id="root"]/section/div/form/button').click()
-        # driver.delete_cookie('auth-zaeem-e8a2f45f')
         time.sleep(0.9)
         print(f'{i} is ok')
 
@@ -48,7 +47,6 @@ def selenium(guests, link):
     chrome_options.add_argument('--ignore-certificate-errors')
     driver = webdriver.Chrome(options=chrome_options)
     driver.get(link)
-    i = 1
     for i in range(guests):
         print(f'{i} is current user')
         try:
@@ -61,7 +59,6 @@ def selenium(guests, link):
                 driver.delete_cookie('auth-zaeem-e8a2f45f')
                 driver.execute_script(f'window.open("{link}","_blank");')
                 driver.switch_to.window(driver.window_handles[i])
-            # print(i)
             i += 1
         except NoSuchElementException as e:
             print(i, 'is in login page')
