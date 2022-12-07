@@ -30,7 +30,7 @@ class AlocomBotArmy:
 
         chrome_options.add_argument(
             '--user-agent="Mozilla/108 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79')
-        chrome_options.add_argument('--headless')
+        # chrome_options.add_argument('--headless')
         chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--disable-extensions")
         chrome_options.add_argument("--proxy-server='direct://'")
@@ -95,6 +95,5 @@ class AlocomBotArmy:
                 pc.printout(f"{i} is in DASHBOARD\n", pc.RED)
                 # print(i, 'is in DASHBOARD')
 
-    def quit(self, driver):
-        print(111111111111111111111)
+    def quit(self):
         return self.driver.quit()
