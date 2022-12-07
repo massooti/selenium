@@ -16,7 +16,7 @@ from urllib import parse
 
 def login(driver, i, cookie):
     try:
-        name = 'bot1- '
+        name = 'Elli- '
         # driver.find_element(
         #     "id", 'firstName').send_keys(name)
         WebDriverWait(driver, 1).until(EC.element_to_be_clickable(
@@ -71,7 +71,8 @@ def selenium(guests, link):
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--ignore-certificate-errors')
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = webdriver.Chrome(options=chrome_options,
+                              executable_path='chromedriver')
     driver.get(link)
     for i in range(guests):
         pc.printout(f"{i} is current user\n", pc.CYAN)
