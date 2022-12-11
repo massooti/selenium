@@ -3,6 +3,18 @@ FROM python:3.8
 WORKDIR /app
 
 
+ARG ROBOT
+
+ARG CLASS_LINK
+
+ENV ROBOT_NAME=$ROBOT
+ENV LINK_CLASS=$CLASS_LINK
+
+
+
+RUN echo "The ROBOT_NAME variable value is $ROBOT_NAME"
+RUN echo "The LINK_CLASS variable value is $CLASS_LINK"
+
 # # Install Chrome WebDriver
 # RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
 #     mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
@@ -21,7 +33,6 @@ RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
 
 COPY . /app
 RUN pip3 install -r requirements.txt
-
 
 CMD ["python3", "main.py"]
 

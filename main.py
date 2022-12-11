@@ -12,15 +12,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common import window
 from selenium.common.exceptions import TimeoutException
 from urllib import parse
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def login(driver, i, cookie):
     try:
-        name = 'Elli- '
+        name = os.getenv('ROBOT_NAME')
         # driver.find_element(
         #     "id", 'firstName').send_keys(name)
         WebDriverWait(driver, 1).until(EC.element_to_be_clickable(
-            (("id", 'firstName')))).send_keys(name)
+            (("id", 'firstName')))).send_keys(name + '-')
         driver.find_element(
             "id", 'lastName').send_keys(i)
         driver.find_element(
@@ -62,17 +65,18 @@ def selenium(guests, link):
     chrome_options.add_argument(
         '--user-agent="Mozilla/108 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79')
     chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--proxy-server='direct://'")
     chrome_options.add_argument("--proxy-bypass-list=*")
     chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--ignore-certificate-errors')
     driver = webdriver.Chrome(options=chrome_options,
                               executable_path='chromedriver')
+    print(link, guests)
     driver.get(link)
     for i in range(guests):
         pc.printout(f"{i} is current user\n", pc.CYAN)
@@ -95,7 +99,7 @@ def selenium(guests, link):
 
 
 if __name__ == '__main__':
-
-    link = "https://test.alocom.co/class/zaeem/e8a2f45f"
-    guests = 500
+    # link = "https://test.alocom.co/class/zaeem/e8a2f45f"
+    link = str(os.getenv('LINK_CLASS'))
+    guests = int(os.getenv('GUESTS'))
     selenium(guests, link)
