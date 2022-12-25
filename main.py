@@ -19,13 +19,13 @@ load_dotenv()
 
 def login(driver, i, cookie):
     try:
-        name = os.getenv('ROBOT_NAME')
+        fullname = f"{os.getenv('ROBOT_NAME')}-{str(i)}"
         # driver.find_element(
         #     "id", 'firstName').send_keys(name)
+        # WebDriverWait(driver, 1).until(EC.element_to_be_clickable(
+        #     (("id", 'firstName')))).send_keys(name + '-')
         WebDriverWait(driver, 1).until(EC.element_to_be_clickable(
-            (("id", 'firstName')))).send_keys(name + '-')
-        driver.find_element(
-            "id", 'lastName').send_keys(i)
+            (("id", 'lastName')))).send_keys(fullname)
         driver.find_element(
             'xpath', '//*[@id="root"]/section/div/form/button').click()
         time.sleep(0.9)
@@ -92,6 +92,8 @@ def selenium(guests, link):
             pc.printout(f"{i} is in login page\n", pc.BLUE)
             # driver.close()
             login(driver, i, cookie)
+            driver.execute_script(
+                'window.localStorage.clear()')   # Removing Inputs
             open_new_tab(link, i)
         except Exception as exception:
             pc.printout(f"{i} is in DASHBOARD\n", pc.RED)
@@ -102,4 +104,5 @@ if __name__ == '__main__':
     # link = "https://test.alocom.co/class/zaeem/e8a2f45f"
     link = str(os.getenv('LINK_CLASS'))
     guests = int(os.getenv('GUESTS'))
+    # print(link, guests, robo[0])
     selenium(guests, link)

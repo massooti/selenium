@@ -13,7 +13,7 @@ ENV LINK_CLASS=$CLASS_LINK
 
 
 RUN echo "The ROBOT_NAME variable value is $ROBOT_NAME"
-RUN echo "The LINK_CLASS variable value is $CLASS_LINK"
+RUN echo "The LINK_CLASS variable value is $LINK_CLASS"
 
 # # Install Chrome WebDriver
 # RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
