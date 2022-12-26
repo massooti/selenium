@@ -1,17 +1,9 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-# from helper import save_cookie, load_cookie, save_cookie2
-import pickle
 from selenium.webdriver.support.ui import WebDriverWait
 from src import printcolors as pc
 import time
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common import window
-from selenium.common.exceptions import TimeoutException
-from urllib import parse
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -78,7 +70,7 @@ def selenium(guests, link):
                               executable_path='chromedriver')
     print(link, guests)
     driver.get(link)
-    for i in range(guests):
+    for i in range(guests+1):
         pc.printout(f"{i} is current user\n", pc.CYAN)
         try:
             if driver.get_cookie(cookie) != None:
@@ -104,5 +96,7 @@ if __name__ == '__main__':
     # link = "https://test.alocom.co/class/zaeem/e8a2f45f"
     link = str(os.getenv('LINK_CLASS'))
     guests = int(os.getenv('GUESTS'))
-    # print(link, guests, robo[0])
     selenium(guests, link)
+
+    while True:
+        pass
